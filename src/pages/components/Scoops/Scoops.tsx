@@ -6,7 +6,11 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { get } from 'http';
+
+import SockJS from "sockjs-client";
+import Stomp from 'stompjs';
+import { TransitionGroup } from 'react-transition-group';
+import { Button, Collapse } from '@mui/material';
 
 type Scoop = {
     slot: number;
@@ -42,7 +46,43 @@ const Scoops = () => {
 
     }, [])
 
+    React.useEffect(() => {
+
+        var socket = new SockJS('https://scooper-api.easy1staking.com/ws');
+        const stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame: any) {
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/topic/messages', function (messageOutput: any) {
+                console.log('ws: ' + JSON.stringify(messageOutput.body));
+                const serverScoop = JSON.parse(messageOutput.body)
+                const scoop: Scoop = {
+                    slot: serverScoop.slot,
+                    txHash: serverScoop.txHash,
+                    numOrders: serverScoop.orders,
+                    scooperHash: serverScoop.scooperPubKeyHash,
+                    isMempool: serverScoop.numMempoolOrders
+                }
+
+                const newScoops = [scoop].concat(scoops.slice())
+                setScoops(newScoops)
+
+            });
+        });
+
+    }, [])
+
+    const add = () => {
+        let scoop = scoops.at(0)
+        if (scoop != null) {
+            let newScoop = {...scoop, txHash: scoop.txHash + 'a'}
+            const newScoops = [newScoop].concat(scoops)
+            setScoops(newScoops)
+        }
+    }
+
     return (
+        <>
+        <Button onClick={() => add()}>Add</Button>
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
@@ -72,6 +112,7 @@ const Scoops = () => {
                 </TableBody>
             </Table>
         </TableContainer>
+        </>
     );
 }
 

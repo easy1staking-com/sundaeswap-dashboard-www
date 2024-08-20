@@ -30,7 +30,7 @@ const ScoopsPies = () => {
                     const stats: ScoopStats = {
                         easy1Scoops: easy1Scoops,
                         easy1ScoopsPct: easy1Scoops / data.total_scoops * 100,
-                        totalScoops: data.total_scoops
+                        totalScoops: data.total_scoops - easy1Scoops
                     }
                     console.log('stats: ' + JSON.stringify(stats))
                     setStats(stats);

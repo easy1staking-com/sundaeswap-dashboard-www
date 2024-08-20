@@ -17,20 +17,18 @@ const BasicBars = () => {
 
             const date = new Date()
 
-            fetch('http://localhost:8080/scoops/stats/scooper/37eb116b3ff8a70e4be778b5e8d30d3b40421ffe6622f6a983f67f3f')
+            fetch('https://scooper-api.easy1staking.com/scoops/stats/scooper/37eb116b3ff8a70e4be778b5e8d30d3b40421ffe6622f6a983f67f3f')
                 .then((res) => res.json())
                 .then((data) => {
 
                     const stats = data.map((stat: any) => {
                         const periodDate = new Date();
                         periodDate.setDate(date.getDate() - Math.abs(stat.period))
-                        console.log('date: ' + date)
-                        console.log('periodDate: ' + periodDate)
                             
                         return {
                             period: periodDate.toLocaleDateString(undefined, {month: "short", day: "numeric"}),
                             easy1Scoops: stat.scooperNumberScoops,
-                            totalScoops: stat.totalNumberScoops
+                            totalScoops: stat.totalNumberScoops - stat.scooperNumberScoops
                         }
 
                     })
