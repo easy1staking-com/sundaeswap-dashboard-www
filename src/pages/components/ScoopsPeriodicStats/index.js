@@ -1,1 +1,1 @@
-export {default} from './Scoops';
+export {default} from './ScoopsPeriodicStats';

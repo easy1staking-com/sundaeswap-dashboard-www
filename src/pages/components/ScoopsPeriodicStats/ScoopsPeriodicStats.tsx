@@ -23,7 +23,7 @@ const BasicBars = () => {
 
                     const stats = data.map((stat: any) => {
                         const periodDate = new Date();
-                        periodDate.setDate(date.getDate() - Math.abs(stat.period))
+                        periodDate.setDate(date.getDate() - Math.abs(stat.period) - 1)
                             
                         return {
                             period: periodDate.toLocaleDateString(undefined, {month: "short", day: "numeric"}),

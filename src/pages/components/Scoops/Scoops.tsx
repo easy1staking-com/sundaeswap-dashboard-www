@@ -60,11 +60,15 @@ const Scoops = () => {
           isMempool: serverScoop.numMempoolOrders,
         };
 
-        const newScoops = [scoop].concat(scoops.slice());
+        const slice = scoops.slice();
+
+        console.log("slice length: " + slice.length);
+
+        const newScoops = [scoop].concat(slice);
         setScoops(newScoops);
       });
     });
-  }, []);
+  }, [scoops]);
 
   const add = () => {
     let scoop = scoops.at(0);
